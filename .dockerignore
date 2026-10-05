@@ -1,0 +1,6 @@
+.env
+.git
+.tools
+backups
+.vscode
+**/__pycache__

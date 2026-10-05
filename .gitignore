@@ -1,0 +1,14 @@
+.env
+.tools/
+backups/
+backend/little-steps
+*.log
+node_modules/
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
+
+__pycache__/
+*.pyc
+*-preview.png

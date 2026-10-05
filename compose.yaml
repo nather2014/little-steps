@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: little_steps
+      POSTGRES_USER: little_steps
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U little_steps -d little_steps"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://little_steps:${DATABASE_PASSWORD}@db:5432/little_steps?sslmode=disable
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:8090}
+      SECURE_COOKIES: ${SECURE_COOKIES:-false}
+    ports:
+      - "127.0.0.1:8090:8090"
+volumes:
+  database:
